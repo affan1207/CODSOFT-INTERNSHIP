@@ -1,0 +1,72 @@
+import tkinter as tk
+
+# Function to handle button clicks
+def button_click(value):
+    current_value = input_field.get()
+    # Append the new value to the current value
+    input_field.delete(0, tk.END)
+    input_field.insert(0, current_value + str(value))
+
+def clear_input():
+    input_field.delete(0, tk.END)
+
+def calculate():
+    expression = input_field.get()
+
+    try:
+        # Evaluate the expression and get the result
+        result = str(eval(expression))
+
+        # Display the result in the input field
+        input_field.delete(0, tk.END)
+        input_field.insert(0, result)
+    except:
+        # Display an error message if the expression is invalid
+        input_field.delete(0, tk.END)
+        input_field.insert(0, "Error")
+
+# Create the main window
+window = tk.Tk()
+window.title("Calculator")
+
+# Create the input field
+input_field = tk.Entry(window, font=("Arial", 16))
+input_field.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+
+# Define the button colors
+button_colors = {
+    "numbers": ("#FFFFFF", "#4CAF50"),
+    "operators": ("#FFFFFF", "#FF9800"),
+    "equals": ("#FFFFFF", "#2196F3"),
+    "clear": ("#FFFFFF", "#E53935")
+}
+
+# Create the buttons
+buttons = [
+    ("7", "numbers"), ("8", "numbers"), ("9", "numbers"), ("/", "operators"),
+    ("4", "numbers"), ("5", "numbers"), ("6", "numbers"), ("*", "operators"),
+    ("1", "numbers"), ("2", "numbers"), ("3", "numbers"), ("-", "operators"),
+    ("0", "numbers"), (".", "numbers"), ("=", "equals"), ("+", "operators"),
+    ("C", "clear")
+]
+
+row = 1
+col = 0
+for button_text, button_type in buttons:
+    text_color, bg_color = button_colors[button_type]
+    if button_text == "=":
+        tk.Button(window, text=button_text, width=5, height=2, command=lambda: calculate(), fg=text_color,
+                  bg=bg_color).grid(row=row, column=col, padx=5, pady=5)
+    elif button_text == "C":
+        tk.Button(window, text=button_text, width=5, height=2, command=lambda: clear_input(), fg=text_color,
+                  bg=bg_color).grid(row=row, column=col, padx=5, pady=5)
+    else:
+        tk.Button(window, text=button_text, width=5, height=2, command=lambda x=button_text: button_click(x),
+                  fg=text_color, bg=bg_color).grid(row=row, column=col, padx=5, pady=5)
+    col += 1
+    if col > 3:
+        col = 0
+        row += 1
+
+# Start the main event loop
+window.mainloop()
